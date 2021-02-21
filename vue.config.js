@@ -35,6 +35,14 @@ module.exports = {
     overlay: {
       warnings: false,
       errors: true
+    },
+    proxy: {
+      // 这里以 key: value 的方式
+      // 声明需要转发的url: 转发的目的地
+      '/api': {
+        target: 'http://ihrm-java.itheima.net',
+        changeOrigin: true
+      }
     }
     // before: require('./mock/mock-server.js')
   },
