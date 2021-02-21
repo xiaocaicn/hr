@@ -109,8 +109,10 @@ export default {
     },
     handleLogin() {
       login(this.loginForm).then((res) => {
-        console.log(this.loginForm)
-        console.log(res)
+        // console.log(this.loginForm)
+        // console.log(res.data.data)
+        this.$store.commit('user/setToken', res.data.data)
+        // console.log(this.$store.state.user.data)
       })
     }
   }
