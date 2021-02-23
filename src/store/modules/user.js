@@ -1,14 +1,17 @@
 import { setToken, getToken } from '@/utils/auth'
-import { login } from '@/api/user'
+import { login, getUserInfo } from '@/api/user'
 export default {
   namespaced: true,
   state: {
-    token: getToken()
+    token: getToken(),
+    userInfo: {}
   },
   mutations: {
     setToken(state, data) {
       state.token = data
       setToken(data)
+    }, setUserInfo(state, data) {
+      state.userInfo = { ...data }
     }
   },
   actions: {
@@ -19,6 +22,12 @@ export default {
       } catch (error) {
         console.log('失败')
       }
+    },
+    async getUserInfo(store) {
+      const res = await getUserInfo()
+      //   console.log(res)
+      store.commit('setUserInfo', res)
+      return res
     }
   }
 }

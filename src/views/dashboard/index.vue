@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
+    <div class="dashboard-text">name: {{ $store.getters.company }}</div>
   </div>
 </template>
 
@@ -13,6 +13,9 @@ export default {
     ...mapGetters([
       'name'
     ])
+  },
+  created() {
+    this.$store.dispatch('user/getUserInfo')
   }
 }
 </script>
