@@ -109,15 +109,16 @@ export default {
       })
     },
     ...mapActions(['user/login']),
-    handleLogin() {
-      // login(this.loginForm).then((res) => { 
+    async handleLogin() {
+      // login(this.loginForm).then((res) => {
       //   console.log(this.loginForm)
       //   console.log(res.data.data)
       //   this.$store.commit('user/setToken', res.data.data)
       //   console.log(this.$store.state.user.data)
       // })
       // this.$store.dispatch('user/login', this.loginForm)
-      this['user/login'](this.loginForm)
+      await this['user/login'](this.loginForm)
+      this.$router.push('/')
     }
   }
 }

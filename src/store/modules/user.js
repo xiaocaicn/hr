@@ -1,9 +1,9 @@
-import { setToken } from '@/utils/auth'
+import { setToken, getToken } from '@/utils/auth'
 import { login } from '@/api/user'
 export default {
   namespaced: true,
   state: {
-    token: ''
+    token: getToken()
   },
   mutations: {
     setToken(state, data) {
