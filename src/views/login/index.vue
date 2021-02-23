@@ -54,7 +54,8 @@
 
 <script>
 import { validMible } from '@/utils/validate'
-import { login } from '@/api/user'
+// import { login } from '@/api/user'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Login',
@@ -107,13 +108,16 @@ export default {
         this.$refs.password.focus()
       })
     },
+    ...mapActions(['user/login']),
     handleLogin() {
-      login(this.loginForm).then((res) => {
-        // console.log(this.loginForm)
-        // console.log(res.data.data)
-        this.$store.commit('user/setToken', res.data.data)
-        // console.log(this.$store.state.user.data)
-      })
+      // login(this.loginForm).then((res) => { 
+      //   console.log(this.loginForm)
+      //   console.log(res.data.data)
+      //   this.$store.commit('user/setToken', res.data.data)
+      //   console.log(this.$store.state.user.data)
+      // })
+      // this.$store.dispatch('user/login', this.loginForm)
+      this['user/login'](this.loginForm)
     }
   }
 }
