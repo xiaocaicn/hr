@@ -1,4 +1,4 @@
-import { setToken, getToken } from '@/utils/auth'
+import { setToken, getToken, removeToken } from '@/utils/auth'
 import { login, getUserInfo, getUserDetailById } from '@/api/user'
 export default {
   namespaced: true,
@@ -12,6 +12,11 @@ export default {
       setToken(data)
     }, setUserInfo(state, data) {
       state.userInfo = { ...data }
+    }, removeToken(state) {
+      removeToken()
+      state.token = ''
+    }, removeUserInfo(state) {
+      state.userInfo = {}
     }
   },
   actions: {
@@ -30,6 +35,10 @@ export default {
       store.commit('setUserInfo', res)
       //   console.log(res)
       return res
+    },
+    async logout(store, data) {
+      store.commit('removeToken')
+      store.commit('removeUserInfo')
     }
   }
 }

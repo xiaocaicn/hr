@@ -118,7 +118,7 @@ export default {
       // })
       // this.$store.dispatch('user/login', this.loginForm)
       await this['user/login'](this.loginForm)
-      this.$router.push('/')
+      this.$router.push(this.redirect || '/')
     }
   }
 }

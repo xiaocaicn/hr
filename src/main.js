@@ -21,15 +21,9 @@ Vue.use(ElementUI, { locale })
 // Vue.use(ElementUI)
 
 Vue.config.productionTip = false
-Vue.directive('imgError', {
-  inserted(dom) {
-    console.log('自定义指令')
-    console.log(dom)
-    dom.onerror = function() {
-      dom.src = 'https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2434309489,2736916860&fm=26&gp=0.jpg'
-    }
-  }
-})
+
+import { imgerror } from '@/directives'
+Vue.directive('imgerror', imgerror)
 
 new Vue({
   el: '#app',
