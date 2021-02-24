@@ -1,4 +1,4 @@
-import { setToken, getToken, removeToken } from '@/utils/auth'
+import { setToken, getToken, removeToken, setTimeStamp } from '@/utils/auth'
 import { login, getUserInfo, getUserDetailById } from '@/api/user'
 export default {
   namespaced: true,
@@ -24,6 +24,7 @@ export default {
       try {
         const res = await login(data)
         store.commit('setToken', res)
+        setTimeStamp()
       } catch (error) {
         console.log('失败')
       }
