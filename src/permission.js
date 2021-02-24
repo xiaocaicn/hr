@@ -7,14 +7,20 @@ import NProgress from 'nprogress'
 // 引入进度条样式
 import 'nprogress/nprogress.css'
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   NProgress.start()
   const whiteList = ['/login', '/404']
-  console.log(store.getters.token)
+  //   console.log(store.getters.token)
+
   if (store.getters.token) {
     if (to.path === '/login') {
       next('/')
     } else {
+      if (!store.getters.userId) {
+        // 如果没有id这个值 才会调用 vuex的获取资料的action
+        await store.dispatch('user/getUserInfo')
+        // 为什么要写await 因为我们想获取完资料再去放行
+      }
       next()
     }
   } else {

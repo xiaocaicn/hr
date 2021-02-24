@@ -33,7 +33,7 @@ service.interceptors.response.use(
     console.log('拦截器失败逻辑')
     console.dir(err)
     Message.error(err.message)
-    return Promise.reject(Error(err.message))
+    return Promise.reject(new Error(err.message))
   }
 )
 

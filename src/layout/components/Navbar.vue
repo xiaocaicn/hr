@@ -11,8 +11,8 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img src="@/assets/common/bigUserHeader.png" class="user-avatar">
-          <span class="name">{{ $store.getters.name }}</span>
+          <img :src="staffPhoto" class="user-avatar" @error="showError">
+          <span class="name">{{ name }}</span>
           <i class="el-icon-caret-bottom" style="color:#fff" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -35,18 +35,19 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
+// import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 
 export default {
   components: {
-    Breadcrumb,
+    // Breadcrumb,
     Hamburger
   },
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'name',
+      'staffPhoto'
     ])
   },
   methods: {
@@ -56,6 +57,9 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    showError(event) {
+      event.target.src = 'https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2434309489,2736916860&fm=26&gp=0.jpg'
     }
   }
 }
