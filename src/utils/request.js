@@ -3,7 +3,7 @@ import { Message } from 'element-ui'
 import store from '@/store'
 import { getTimeStamp } from './auth'
 import router from '@/router'
-const TimeOutDuration = 2
+const TimeOutDuration = 3600
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -18,7 +18,7 @@ service.interceptors.request.use(config => {
       config.headers['Authorization'] = `Bearer ${store.getters.token}`
     } else {
       store.dispatch('user/logout')
-      router.push('/login')
+      router.push('/login?redirect=' + location.hash.substring(1))
       return Promise.reject(new Error('登录已过期'))
     }
   }
@@ -39,10 +39,15 @@ service.interceptors.response.use(
       return Promise.reject(new Error(message))
     }
   }, err => {
-    console.log('拦截器失败逻辑')
-    console.dir(err)
-    Message.error(err.message)
-    return Promise.reject(new Error(err.message))
+    if (err.response && err.response.data && err.response.data.code === 10002) {
+      store.dispatch('user/logout')
+      router.push('/login?redirect=' + location.hash.substring(1))
+    } else {
+      // console.log('拦截器失败逻辑')
+      console.dir(err)
+      Message.error(err.message)
+      return Promise.reject(new Error(err.message))
+    }
   }
 )
 function isTimeOut() {
