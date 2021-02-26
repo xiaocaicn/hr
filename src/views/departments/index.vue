@@ -2,49 +2,10 @@
   <div class="dashboard-container">
     <div class="app-container">
       <el-card class="tree-card">
-        <el-row type="flex" justify="space-between" align="middle" style="height: 40px">
-          <el-col>
-            <strong>
-              江苏传智播客教育科技股份有限公司
-            </strong>
-          </el-col>
-          <el-col :span="4">
-            <el-row type="flex" justify="end">
-              <el-col>负责人</el-col>
-              <el-col>
-                <el-dropdown>
-                  <span>操作 <i class="el-icon-arrow-down" /></span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item>添加子部门</el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-              </el-col>
-            </el-row>
-          </el-col>
-        </el-row>
+        <treeTools :tree-node="company" :is-root="true" />
+        <hr>
         <el-tree default-expand-all :data="departs" :props="defaultProps">
-          <el-row slot-scope="{ data }" type="flex" justify="space-between" align="middle" style="height: 40px; width: 100%;">
-            <el-col>
-              <span>
-                {{ data.name }}
-              </span>
-            </el-col>
-            <el-col :span="4">
-              <el-row type="flex" justify="end">
-                <el-col>{{ data.manager }}</el-col>
-                <el-col>
-                  <el-dropdown>
-                    <span>操作 <i class="el-icon-arrow-down" /></span>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item>添加子部门</el-dropdown-item>
-                      <el-dropdown-item>编辑子部门</el-dropdown-item>
-                      <el-dropdown-item>删除子部门</el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
-                </el-col>
-              </el-row>
-            </el-col>
-          </el-row>
+          <treeTools slot-scope="{data}" :tree-node="data" @deleDepartments="getDepartments" />
         </el-tree>
       </el-card>
     </div>
@@ -52,33 +13,45 @@
 </template>
 
 <script>
+import TreeTools from './components/tree-tools'
+import { getDepartments } from '@/api/departments'
 export default {
+  components: {
+    TreeTools },
   data() {
     return {
-      departs: [
-        {
-          name: '总裁办',
-          manager: '王小明',
-          children: [
-            {
-              manager: '陈小明',
-              name: '董事会'
-            }
-          ]
-        },
-        {
-          manager: '李小明',
-          name: '行政部'
-        },
-        {
-          manager: '杨小明',
-          name: '人事部'
-        }
-      ],
+      departs: [],
+      company: {
+        name: '江苏传智播客教育科技股份有限公司',
+        manager: '负责人'
+      },
       defaultProps: {
         label: 'name',
         children: 'children'
       }
+    }
+  },
+  created() {
+    this.getDepartments()
+  }, methods: {
+    transListToTreeData(list, pid) {
+      const res = []
+      list.forEach(item => {
+        if (item.pid === pid) {
+          const children = this.transListToTreeData(list, item.id)
+          if (children.length) {
+            item.children = children
+          }
+          res.push(item)
+        }
+      })
+      return res
+    },
+    async getDepartments() {
+      const res = await getDepartments()
+      // console.log(res)
+      this.departs = this.transListToTreeData(res.depts, '')
+      // console.log(this.departs)
     }
   }
 }
