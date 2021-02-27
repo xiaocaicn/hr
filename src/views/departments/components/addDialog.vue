@@ -1,9 +1,9 @@
 <template>
   <!-- 新增部门的弹层 -->
-  <el-dialog title="新增部门" :visible="showDailog" :node="node">
+  <el-dialog title="新增部门" :visible="showDailog" :node="node" @close="btnCancel">
     <!-- 表单组件  el-form   label-width设置label的宽度   -->
     <!-- 匿名插槽 -->
-    <el-form :model="formData" :rules="rules" label-width="120px">
+    <el-form ref="deptForm" :model="formData" :rules="rules" label-width="120px">
       <el-form-item label="部门名称" prop="name">
         <el-input v-model="formData.name" style="width:80%" placeholder="1-50个字符" />
       </el-form-item>
@@ -23,15 +23,15 @@
     <el-row slot="footer" type="flex" justify="center">
       <!-- 列被分为24 -->
       <el-col :span="6">
-        <el-button type="primary" size="small">确定</el-button>
-        <el-button size="small">取消</el-button>
+        <el-button type="primary" size="small" @click="btnOK">确定</el-button>
+        <el-button size="small" @click="btnCancel">取消</el-button>
       </el-col>
     </el-row>
   </el-dialog>
 </template>
 
 <script>
-import { getDepartments } from '@/api/departments'
+import { getDepartments, addDepartments } from '@/api/departments'
 import { getEmployesSimple } from '@/api/employees'
 export default {
   props: {
@@ -94,9 +94,24 @@ export default {
   },
   methods: {
     async getEmployesSimple() {
-      const res = await getEmployesSimple()
-      console.log(res)
-      this.people = res
+      this.people = await getEmployesSimple()
+    }, async btnOK() {
+      try {
+      // 校验表单
+        console.log(1)
+        await this.$refs.deptForm.validate()
+        // 提交添加部门请求
+        await addDepartments({ ...this.formData, pid: this.node.id })
+        this.$emit('addDepartment')
+        this.$emit('closeAddDepart')
+        this.success('添加成功')
+      } catch (error) {
+        console.log(error)
+      }
+    }, btnCancel() {
+      this.$refs.deptForm.resetFields()
+      console.log(1)
+      this.$emit('closeAddDepart')
     }
   }
 }

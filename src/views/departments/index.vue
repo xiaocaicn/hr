@@ -8,7 +8,7 @@
           <treeTools slot-scope="{data}" :tree-node="data" @addDepartment="addDepartment" @deleDepartments="getDepartments" />
         </el-tree>
       </el-card>
-      <addDialog :show-dailog="showDialog" :node="node" />
+      <addDialog :show-dailog.sync="showDialog" :node="node" @closeAddDepart="closeAddDepart" @addDepartment="getDepartments" />
     </div>
   </div>
 </template>
@@ -63,6 +63,8 @@ export default {
       console.log(treeNode.id)
       this.showDialog = true
       this.node = treeNode
+    }, closeAddDepart() {
+      this.showDialog = false
     }
   }
 }

@@ -12,7 +12,7 @@ export function delDepartments(id) {
     method: 'delete'
   })
 }
-export function addDepartments(id) {
+export function addDepartments() {
   return request({
     url: '/company/department',
     method: 'post'
