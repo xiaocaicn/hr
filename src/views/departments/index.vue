@@ -2,13 +2,30 @@
   <div class="dashboard-container">
     <div class="app-container">
       <el-card class="tree-card">
-        <treeTools :tree-node="company" :is-root="true" @addDepartment="addDepartment" />
+        <treeTools
+          :tree-node="company"
+          :is-root="true"
+          @addDepartment="addDepartment"
+          @editAddDepts="editAddDepts"
+        />
         <hr>
         <el-tree default-expand-all :data="departs" :props="defaultProps">
-          <treeTools slot-scope="{data}" :tree-node="data" @addDepartment="addDepartment" @deleDepartments="getDepartments" />
+          <treeTools
+            slot-scope="{data}"
+            :tree-node="data"
+            @addDepartment="addDepartment"
+            @deleDepartments="getDepartments"
+            @editAddDepts="editAddDepts"
+          />
         </el-tree>
       </el-card>
-      <addDialog :show-dailog.sync="showDialog" :node="node" @closeAddDepart="closeAddDepart" @addDepartment="getDepartments" />
+      <addDialog
+        ref="addDepts"
+        :show-dailog.sync="showDialog"
+        :node="node"
+        @closeAddDepart="closeAddDepart"
+        @addDepartment="getDepartments"
+      />
     </div>
   </div>
 </template>
@@ -60,11 +77,16 @@ export default {
       // console.log(this.departs)
     },
     addDepartment(treeNode) {
-      console.log(treeNode.id)
+      // console.log(treeNode.id)
       this.showDialog = true
       this.node = treeNode
     }, closeAddDepart() {
       this.showDialog = false
+    }, async editAddDepts(treeNode) {
+      console.log(treeNode.id)
+      await this.$refs.addDepts.getDepartmentsDetail(treeNode.id)
+      this.showDialog = true
+      this.node = treeNode
     }
   }
 }

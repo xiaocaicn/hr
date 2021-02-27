@@ -12,9 +12,22 @@ export function delDepartments(id) {
     method: 'delete'
   })
 }
-export function addDepartments() {
+export function addDepartments(data) {
   return request({
     url: '/company/department',
-    method: 'post'
+    method: 'post',
+    data
+  })
+}
+export function updataDepartments(data) {
+  return request({
+    url: '/company/department/' + data.id,
+    method: 'put',
+    data
+  })
+}
+export function getDepartmentsDetail(id) {
+  return request({
+    url: '/company/department/' + id
   })
 }

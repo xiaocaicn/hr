@@ -46,6 +46,7 @@ export default {
           this.$emit('addDepartment', this.treeNode)
         } else if (type === 'edit') {
         //  编辑部门的操作
+          this.$emit('editAddDepts', this.treeNode)
         } else {
         //  删除操作
         // 添加用户确认
