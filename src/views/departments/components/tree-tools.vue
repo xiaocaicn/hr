@@ -41,6 +41,9 @@ export default {
       try {
         if (type === 'add') {
         // 添加子部门的操作
+          // console.log(123)
+          // console.log(this.treeNode)
+          this.$emit('addDepartment', this.treeNode)
         } else if (type === 'edit') {
         //  编辑部门的操作
         } else {
