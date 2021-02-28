@@ -25,6 +25,10 @@ Vue.config.productionTip = false
 import { imgerror } from '@/directives'
 Vue.directive('imgerror', imgerror)
 
+// 引入组件
+import Component from '@/components'
+Vue.use(Component)
+
 new Vue({
   el: '#app',
   router,
