@@ -29,6 +29,14 @@ Vue.directive('imgerror', imgerror)
 import Component from '@/components'
 Vue.use(Component)
 
+// 批量引入方法
+import * as filters from '@/filters'
+for (const key in filters) {
+  // keys是过滤器的名字,filters[key]是函数
+  Vue.filter(key, filters[key])
+//   console.log(key, filters[key])
+}
+
 new Vue({
   el: '#app',
   router,
