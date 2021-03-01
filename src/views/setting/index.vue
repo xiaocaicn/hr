@@ -11,6 +11,7 @@
                 icon="el-icon-plus"
                 size="small"
                 type="primary"
+                @click="addRole"
               >新增角色</el-button>
             </el-row>
             <!-- 表格 -->
@@ -25,7 +26,7 @@
               <el-table-column label="操作">
                 <template slot-scope="scope">
                   <el-button size="small" type="success">分配权限</el-button>
-                  <el-button size="small" type="primary">编辑</el-button>
+                  <el-button size="small" type="primary" @click="updataRole(scope.row.id)">编辑</el-button>
                   <el-button size="small" type="danger" @click="deleteRole(scope.row.id)">删除</el-button>
                 </template>
               </el-table-column>
@@ -67,6 +68,24 @@
           </el-tab-pane>
 
         </el-tabs>
+        <!-- 弹窗 -->
+        <el-dialog :title="dialogTitle" :visible="showDialog" @close="btnCancel">
+          <el-form v-if="showDialog" ref="roleForm" :model="roleForm" :rules="rules" label-width="100px">
+            <el-form-item label="角色名称" prop="name">
+              <el-input v-model="roleForm.name" />
+            </el-form-item>
+            <el-form-item label="角色描述" prop="description">
+              <el-input v-model="roleForm.description" />
+            </el-form-item>
+          </el-form>
+          <!-- 底部 -->
+          <el-row slot="footer" type="flex" justify="center">
+            <el-col :span="6">
+              <el-button size="small" @click="btnCancel">取消</el-button>
+              <el-button size="small" type="primary" @click="btnOK">确定</el-button>
+            </el-col>
+          </el-row>
+        </el-dialog>
       </el-card>
     </div>
   </div>
@@ -74,7 +93,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getCompanyInfo, getRoleList, deleteRole } from '@/api/setting'
+import { getCompanyInfo, getRoleList, deleteRole, updataRole, getRoleDetail, addRole } from '@/api/setting'
 export default {
   data() {
     return {
@@ -90,11 +109,23 @@ export default {
         // 当前页码
         page: 1,
         pagesize: 2
+      },
+      showDialog: false,
+      roleForm: {
+        description: '', name: ''
+      }, rules: {
+        name: [{ required: true, message: '角色名称不能为空', trigger: 'blur' },
+          { min: 2, max: 20, message: '名称长度在 2-20 之间', trigger: 'blur' }],
+        description: [{ required: true, message: '角色描述不能为空', trigger: 'blur' },
+          { min: 5, max: 200, message: '简介长度在 5-200 之间', trigger: 'blur' }]
       }
     }
   },
   computed: {
-    ...mapGetters(['companyId'])
+    ...mapGetters(['companyId']),
+    dialogTitle() {
+      return this.roleForm.id ? '编辑角色' : '新增角色'
+    }
   }, created() {
     this.getCompanyInfo()
     this.getRoleList()
@@ -123,6 +154,37 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    }, btnCancel() {
+      // this.roleForm = {
+      //   description: '', name: ''
+      // }
+      // 或者使用销毁表单的方式在73:
+      this.showDialog = false
+    },
+    async btnOK() {
+      await this.$refs.roleForm.validate()
+      if (this.roleForm.id) {
+        await updataRole(this.roleForm)
+      } else {
+        await addRole(this.roleForm)
+      }
+      await getRoleList()
+      this.showDialog = false
+      this.$message.success('操作成功')
+    },
+    async updataRole(id) {
+      const res = await getRoleDetail(id)
+      // console.log(res)
+      this.roleForm = res
+      if (res.id) {
+        this.settingDailog = '编辑员工资料'
+      } else {
+        this.settingDailog = '新增员工'
+      }
+      this.showDialog = true
+    },
+    addRole() {
+      this.showDialog = true
     }
   }
 }

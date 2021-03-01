@@ -14,9 +14,32 @@ export function getRoleList(params) {
     params
   })
 }
+// 删除员工信息
 export function deleteRole(id) {
   return request({
     url: `/sys/role/${id}`,
     method: 'delete'
+  })
+}
+// 更新员工信息
+export function updataRole(data) {
+  return request({
+    url: `/sys/role/${data.id}`,
+    method: 'put',
+    data
+  })
+}
+// 获取详细员工信息
+export function getRoleDetail(id) {
+  return request({
+    url: `/sys/role/${id}`
+  })
+}
+// 新增
+export function addRole(data) {
+  return request({
+    url: '/sys/role',
+    method: 'post',
+    data
   })
 }
