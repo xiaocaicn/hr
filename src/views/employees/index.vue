@@ -6,7 +6,7 @@
         <template slot="after">
           <el-button size="small" type="warning">导入</el-button>
           <el-button size="small" type="danger">导出</el-button>
-          <el-button size="small" type="primary">新增员工</el-button>
+          <el-button size="small" type="primary" @click="addEmployees">新增员工</el-button>
         </template>
       </PageTools>
       <el-card>
@@ -69,6 +69,7 @@
           />
         </el-row>
       </el-card>
+      <AddEmployeedialog :show-dialog="showDialog" />
     </div>
   </div>
 </template>
@@ -76,7 +77,11 @@
 <script>
 import { getEmployesList, delEmployee } from '@/api/employees'
 import Employees from '@/api/constant/employees'
+import AddEmployeedialog from './components/add-employee-dialog'
 export default {
+  components: {
+    AddEmployeedialog
+  },
   data() {
     return {
       list: [],
@@ -84,7 +89,8 @@ export default {
       page: {
         page: 1,
         size: 10
-      }
+      },
+      showDialog: false
     }
   },
   created() {
@@ -128,6 +134,9 @@ export default {
       } catch (error) {
         console.log('删除失败')
       }
+    },
+    addEmployees() {
+      this.showDialog = true
     }
   }
 }
