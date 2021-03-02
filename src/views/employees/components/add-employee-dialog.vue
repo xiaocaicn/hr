@@ -1,7 +1,7 @@
 <template>
-  <el-dialog title="新增员工" :visible="showDialog">
+  <el-dialog title="新增员工" :visible="showDialog" @close="btnCancel">
     <!-- 表单 -->
-    <el-form label-width="120px" :model="formData" :rules="rules">
+    <el-form v-if="showDialog" ref="employeeForm" label-width="120px" :model="formData" :rules="rules">
       <el-form-item label="姓名">
         <el-input
           v-model="formData.username"
@@ -28,7 +28,14 @@
           v-model="formData.formOfEmployment"
           style="width: 50%"
           placeholder="请选择"
-        />
+        >
+          <el-option
+            v-for="item in Employees.hireType"
+            :key="item.id"
+            :value="item.id"
+            :label="item.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="工号">
         <el-input
@@ -65,11 +72,11 @@
       <!-- <template v-slot:footer> -->
       <el-row type="flex" justify="center">
         <el-col :span="6">
-          <el-button size="small">取消</el-button>
+          <el-button size="small" @click="btnCancel">取消</el-button>
           <el-button
             type="primary"
             size="small"
-            @click="addEmployee"
+            @click="btnOK"
           >确定</el-button>
         </el-col>
       </el-row>
@@ -81,6 +88,7 @@
 import { addEmployee } from '@/api/employees'
 import { getDepartments } from '@/api/departments'
 import { transListToTreeData } from '@/utils'
+import Employees from '@/api/constant/employees'
 export default {
   props: {
     showDialog: {
@@ -129,14 +137,23 @@ export default {
           { required: true, message: '入职时间不能为空', trigger: 'blur' }
         ]
       },
-      treeData: []
+      treeData: [],
+      Employees
     }
   },
   created() {
   },
   methods: {
-    async addEmployee() {
-      await addEmployee(this.formData)
+    async btnOK() {
+      try {
+        await this.$refs.employeeForm.validate()
+        await addEmployee(this.formData)
+        this.$parent.getEmployesList()
+        this.$parent.showDialog = false
+        this.$message.success('增加成功')
+      } catch (error) {
+        console.log(error)
+      }
     },
     async getDepatList() {
       const { depts } = await getDepartments()
@@ -148,6 +165,18 @@ export default {
       this.formData.departmentName = node.name
       this.treeData = []
       //   console.log(this.formData)
+    }, btnCancel() {
+      this.formData = {
+        username: '',
+        mobile: '',
+        formOfEmployment: '',
+        workNumber: '',
+        departmentName: '',
+        timeOfEntry: '',
+        correctionTime: ''
+      }
+      this.$refs.employeeForm.resetFields()
+      this.$parent.showDialog = false
     }
   }
 }
