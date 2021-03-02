@@ -32,15 +32,23 @@
             sortable=""
             prop="enableState"
             :formatter="formatEable"
-          />
+          >
+            <template slot-scope="scope">
+              <el-switch :value="scope.row.enableState === 1" />
+            </template>
+          </el-table-column>
           <el-table-column label="操作" sortable="" fixed="right" width="280">
-            <template>
+            <template slot-scope="scope">
               <el-button type="text" size="small">查看</el-button>
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
               <el-button type="text" size="small">角色</el-button>
-              <el-button type="text" size="small">删除</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="delEmployee(scope.row.id)"
+              >删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -66,7 +74,7 @@
 </template>
 
 <script>
-import { getEmployesList } from '@/api/employees'
+import { getEmployesList, delEmployee } from '@/api/employees'
 import Employees from '@/api/constant/employees'
 export default {
   data() {
@@ -110,6 +118,16 @@ export default {
         return Number(item.id) === cellValue
       })
       return res ? res.value : '未知'
+    }, async delEmployee(id) {
+      try {
+        await this.$confirm('确认删除?')
+        await delEmployee(id)
+        // 刷新页面
+        this.getEmployesList()
+        this.$message.success('删除成功')
+      } catch (error) {
+        console.log('删除失败')
+      }
     }
   }
 }
