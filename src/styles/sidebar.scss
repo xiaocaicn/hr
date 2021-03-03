@@ -89,6 +89,14 @@
             }
           }
         }
+        &.router-link-active {
+          background-color: #fff;
+          li{
+            .svg-icon,span{
+              color: #3d6df8;
+            }
+          }
+        }
       }
     }
 

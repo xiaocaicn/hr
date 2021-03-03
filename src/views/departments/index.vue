@@ -34,6 +34,7 @@
 import TreeTools from './components/tree-tools'
 import addDialog from './components/addDialog'
 import { getDepartments } from '@/api/departments'
+import { transListToTreeData } from '@/utils'
 export default {
   components: {
     TreeTools, addDialog },
@@ -57,23 +58,23 @@ export default {
   created() {
     this.getDepartments()
   }, methods: {
-    transListToTreeData(list, pid) {
-      const res = []
-      list.forEach(item => {
-        if (item.pid === pid) {
-          const children = this.transListToTreeData(list, item.id)
-          if (children.length) {
-            item.children = children
-          }
-          res.push(item)
-        }
-      })
-      return res
-    },
+    // transListToTreeData(list, pid) {
+    //   const res = []
+    //   list.forEach(item => {
+    //     if (item.pid === pid) {
+    //       const children = this.transListToTreeData(list, item.id)
+    //       if (children.length) {
+    //         item.children = children
+    //       }
+    //       res.push(item)
+    //     }
+    //   })
+    //   return res
+    // },
     async getDepartments() {
       const res = await getDepartments()
       // console.log(res)
-      this.departs = this.transListToTreeData(res.depts, '')
+      this.departs = transListToTreeData(res.depts, '')
       // console.log(this.departs)
     },
     addDepartment(treeNode) {
