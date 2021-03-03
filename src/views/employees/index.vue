@@ -5,7 +5,7 @@
         <span slot="before">总数据有{{ totalCount }}条</span>
         <template slot="after">
           <el-button size="small" type="warning" @click="$router.push('/import')">导入</el-button>
-          <el-button size="small" type="danger">导出</el-button>
+          <el-button size="small" type="danger" @click="ExportExcel">导出</el-button>
           <el-button size="small" type="primary" @click="addEmployees">新增员工</el-button>
         </template>
       </PageTools>
@@ -39,7 +39,7 @@
           </el-table-column>
           <el-table-column label="操作" sortable="" fixed="right" width="280">
             <template slot-scope="scope">
-              <el-button type="text" size="small">查看</el-button>
+              <el-button type="text" size="small" @click="$router.push('/employees/detail/'+ scope.row.id)">查看</el-button>
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
@@ -78,6 +78,8 @@
 import { getEmployesList, delEmployee } from '@/api/employees'
 import Employees from '@/api/constant/employees'
 import AddEmployeedialog from './components/add-employee-dialog'
+// 引入js中无法使用的过滤器作为方法进行使用
+import { formatDate } from '@/filters'
 export default {
   components: {
     AddEmployeedialog
@@ -137,6 +139,45 @@ export default {
     },
     addEmployees() {
       this.showDialog = true
+    },
+    async ExportExcel() {
+      const { rows } = await getEmployesList({ page: 1, size: this.totalCount })
+      console.log(rows)
+      // 字典
+      const headersDict = {
+        '手机号': 'mobile',
+        '姓名': 'username',
+        '入职日期': 'timeOfEntry',
+        '聘用形式': 'formOfEmployment',
+        '转正日期': 'correctionTime',
+        '工号': 'workNumber',
+        '部门': 'departmentName'
+      }
+
+      const arr = rows.map(item => {
+        return this.objToArr(item, headersDict)
+      })
+
+      // 导出文件
+      import('@/vendor/Export2Excel').then(excel => {
+        // console.log(excel)
+        excel.export_json_to_excel({
+          header: Object.keys(headersDict),
+          data: arr
+        })
+      })
+    },
+    objToArr(item, headersDict) {
+      const arr = []
+      for (const key in headersDict) {
+        const enkey = headersDict[key]
+        if (enkey === 'timeOfEntry' || enkey === 'correctionTime') {
+          arr.push(item[enkey] = formatDate(item[enkey], 'yyyy-MM-dd'))
+        } else {
+          arr.push(item[enkey])
+        }
+      }
+      return arr
     }
   }
 }
