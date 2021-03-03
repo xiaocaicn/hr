@@ -18,8 +18,12 @@
               </el-form-item>
             </el-form>
           </el-tab-pane>
-          <el-tab-pane label="个人详情" />
-          <el-tab-pane label="岗位信息" />
+          <el-tab-pane label="个人详情">
+            <UserInfoComponent />
+          </el-tab-pane>
+          <el-tab-pane label="工作详情">
+            <JobInfoComponents />
+          </el-tab-pane>
         </el-tabs>
       </el-card>
     </div>
@@ -29,7 +33,10 @@
 <script>
 import { getUserDetailById } from '@/api/user'
 import { saveUserDetailById } from '@/api/employees'
+import UserInfoComponent from './components/user-info'
+import JobInfoComponents from './components/job-info'
 export default {
+  components: { UserInfoComponent, JobInfoComponents },
   data() {
     return {
       userId: this.$route.params.id,
