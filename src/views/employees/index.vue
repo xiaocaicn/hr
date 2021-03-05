@@ -13,6 +13,11 @@
         <!-- 员工列表 -->
         <el-table border :data="list">
           <el-table-column label="序号" type="index" />
+          <el-table-column label="头像">
+            <template slot-scope="scope">
+              <img v-imgerror="require('@/assets/common/head.jpg')" class="staffPhoto" :src="scope.row.staffPhoto" alt="" @click="showCodeDialog(scope.row.staffPhoto)">
+            </template>
+          </el-table-column>
           <el-table-column label="姓名" sortable="" prop="username" />
           <el-table-column label="工号" sortable="" prop="workNumber" />
           <el-table-column
@@ -70,11 +75,17 @@
         </el-row>
       </el-card>
       <AddEmployeedialog :show-dialog="showDialog" />
+      <el-dialog title="二维码" :visible="isShowCode" @close="isShowCode = false">
+        <el-row type="flex" justify="center" align="middle">
+          <canvas ref="mycanvas" />
+        </el-row>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
+import QRcode from 'qrcode'
 import { getEmployesList, delEmployee } from '@/api/employees'
 import Employees from '@/api/constant/employees'
 import AddEmployeedialog from './components/add-employee-dialog'
@@ -92,13 +103,23 @@ export default {
         page: 1,
         size: 10
       },
-      showDialog: false
+      showDialog: false,
+      isShowCode: false
     }
   },
   created() {
     this.getEmployesList()
   },
   methods: {
+    showCodeDialog(imgUrl) {
+      console.log(imgUrl)
+      if (imgUrl) {
+        this.isShowCode = true
+      }
+      this.$nextTick(() => {
+        QRcode.toCanvas(this.$refs.mycanvas, imgUrl)
+      })
+    },
     async getEmployesList() {
       const { rows, total } = await getEmployesList(this.page)
       // console.log(res)
@@ -183,5 +204,10 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+.staffPhoto {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
 </style>

@@ -58,7 +58,7 @@
         <el-col :span="12">
           <el-form-item label="员工头像">
             <!-- 放置上传图片 -->
-            <ImageUpload />
+            <ImageUpload ref="headerPhoto" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -90,6 +90,7 @@
 
         <el-form-item label="员工照片">
           <!-- 放置上传图片 -->
+          <ImageUpload ref="IDPhoto" />
         </el-form-item>
         <el-form-item label="国家/地区">
           <el-select v-model="formData.nationalArea" class="inputW2">
@@ -364,16 +365,40 @@ export default {
   methods: {
     async getPersonalDetail() {
       this.formData = await getPersonalDetail(this.userId)
+      if (this.formData.staffPhoto) {
+        this.$refs.headerPhoto.fileList = [{
+          url: this.formData.staffPhoto
+        }]
+      }
     },
     async getUserDetailById() {
       this.userInfo = await getUserDetailById(this.userId)
+      if (this.userInfo.staffPhoto) {
+        this.$refs.IDPhoto.fileList = [{
+          url: this.userInfo.staffPhoto
+        }]
+      }
     },
     async saveUser() {
-      await saveUserDetailById(this.userInfo)
+      // 获取上传组件的文件列表
+      const fileList = this.$refs.IDPhoto.fileList
+
+      // 容易出错的地方, 图片太大, 网速太慢,用户心急, 必须确认所有图片的 status === 'success'才可以发送, 不然应该报错
+      if (fileList.some(item => item.status !== 'success')) {
+        this.$message.warning('请等待所有图片上传完毕')
+        return
+      }
+
+      // 将上传组件的文件加上表单数据一起发送
+      await updatePersonal({ ...this.formData, id: this.userId, staffPhoto: fileList && fileList.length > 0 ? fileList[0].url : '' })
       this.$message.success('修改成功')
     },
     async savePersonal() {
-      await updatePersonal({ ...this.formData, id: this.userId })
+      const fileList = this.$refs.headerPhoto.fileList
+      if (fileList.some(item => { item.status !== 'success' })) {
+        this.$message.warning('请等待所有照片上传成功')
+      }
+      await saveUserDetailById({ ...this.userInfo, id: this.userId, staffPhoto: fileList && fileList.length > 0 ? fileList[0].url : '' })
       this.$message.success('修改成功')
     }
   }

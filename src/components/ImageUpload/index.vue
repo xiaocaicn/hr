@@ -21,6 +21,7 @@
     >
       <i class="el-icon-plus" />
     </el-upload>
+    <el-progress v-if="perShowDialog" :percentage="percentage" :show-text="false" class="pergress" />
 
     <el-dialog title="预览" :visible="showDialog" @close="showDialog = false">
       <img :src="imgUrl" alt="">
@@ -40,11 +41,9 @@ export default {
       showDialog: false,
       imgUrl: '',
       currentFileUid: '',
-      fileList: [
-        {
-          url: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic1.win4000.com%2Fmobile%2F6%2F5795b9c935787.jpg&refer=http%3A%2F%2Fpic1.win4000.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1617501995&t=2faa51526a99004d8af7aa1d23bfb8e3'
-        }
-      ]
+      percentage: 0,
+      perShowDialog: false,
+      fileList: []
     }
   },
   methods: {
@@ -75,6 +74,7 @@ export default {
         return false
       }
       this.currentFileUid = file.uid
+      this.perShowDialog = true
       return true
     },
     upload(params) {
@@ -89,19 +89,25 @@ export default {
         // 储存方式标准储存(固定不用改)
         StorageClass: 'STANDARD',
         // 文件本身
-        Body: params.file
-        // onProgress: function(progressData) {
-        //   console.log(JSON.stringify(progressData))
-        // }
+        Body: params.file,
+        onProgress: (progressData) => {
+          console.log(progressData)
+          //   console.log(JSON.stringify(progressData))
+          this.percentage = Math.floor(progressData.percent * 100)
+        }
       }, (err, data) => {
         //   成功的部分
         console.log(err || data)
         this.fileList = this.fileList.map(item => {
           if (item.uid === this.currentFileUid) {
             item.url = 'http://' + data.Location
+            item.status = 'success'
           }
           return item
         })
+        setTimeout(() => {
+          this.perShowDialog = false
+        }, 800)
       })
     }
   }
@@ -118,5 +124,8 @@ export default {
   ::v-deep .el-upload {
     display: none;
   }
+}
+.pergress{
+	width:146px;
 }
 </style>
