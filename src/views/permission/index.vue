@@ -20,7 +20,7 @@
           <el-table-column align="center" label="操作">
             <template slot-scope="scope">
               <el-button v-if="scope.row.type === 1" type="text" @click="addPower(2, scope.row.id)">添加</el-button>
-              <el-button type="text">编辑</el-button>
+              <el-button type="text" @click="editPower(scope.row.id)">编辑</el-button>
               <el-button type="text">删除</el-button>
             </template>
           </el-table-column>
@@ -52,13 +52,17 @@ export default {
   methods: {
     async getPermissionList() {
       const res = await getPermissionList()
-      console.log(res)
+      // console.log(res)
       this.list = transListToTreeData(res, '0')
-      console.log(this.list)
+      // console.log(this.list)
     },
     addPower(type, pid) {
       this.showDialog = true
       this.$refs.addPowerDialog.getData(type, pid)
+    },
+    async editPower(id) {
+      await this.$refs.addPowerDialog.editPowerDialog(id)
+      this.showDialog = true
     }
   }
 }

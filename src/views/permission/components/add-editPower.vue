@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { addPermission } from '@/api/permission'
+import { addPermission, getPermissionDetail, updatePermission } from '@/api/permission'
 export default {
   props: {
     showDialog: {
@@ -40,6 +40,7 @@ export default {
   },
   data() {
     return {
+      userId: '',
       showText: '',
       formData: {
         name: '', // 名称
@@ -60,6 +61,16 @@ export default {
     }
   }, methods: {
     btnCancel() {
+      this.formData = {
+        name: '', // 名称
+        code: '', // 标识
+        description: '', // 描述
+        type: '', // 类型 该类型 不需要显示 因为点击添加的时候已经知道类型了
+        pid: '', // 因为做的是树 需要知道添加到哪个节点下了
+        enVisible: '0' // 开启
+      }
+      this.$refs.perForm.resetFields()
+      this.$emit('update:showDialog', false)
     },
     getData(type, pid) {
       this.formData.type = type
@@ -67,16 +78,26 @@ export default {
       this.formData.enVisible = '1'
       console.log(this.formData)
     },
+    async editPowerDialog(id) {
+      this.userId = id
+      //   console.log(id)
+      this.formData = await getPermissionDetail(id)
+    //   console.log(this.formData)
+    },
     async btnOK() {
-      //   校验
-      this.$refs.perForm.validate()
-      // 请求
-      await addPermission(this.formData)
+      // 校验
+      await this.$refs.perForm.validate()
+      if (this.formData.id) {
+        await updatePermission(this.formData)
+      } else {
+        // 请求
+        await addPermission(this.formData)
+      }
       // 提示
-      this.$message.success('增加成功')
-      //   刷新页面
+      this.$message.success('操作成功')
+      // 刷新页面
       this.$parent.getPermissionList()
-      //   关闭弹窗
+      // 关闭弹窗
       this.$emit('update:showDialog', false)
     }
   }
