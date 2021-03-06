@@ -75,7 +75,7 @@
         </el-row>
       </el-card>
       <AddEmployeedialog :show-dialog="showDialog" />
-      <AssignRole :show-role-dialog="AssignRoleShowDialog" />
+      <AssignRole ref="AssignRoleForm" :show-role-dialog.sync="AssignRoleShowDialog" />
       <el-dialog title="二维码" :visible="isShowCode" @close="isShowCode = false">
         <el-row type="flex" justify="center" align="middle">
           <canvas ref="mycanvas" />
@@ -205,8 +205,9 @@ export default {
       }
       return arr
     },
-    editRole(id) {
+    async editRole(id) {
       this.userId = id
+      await this.$refs.AssignRoleForm.getUserDetailById(id)
       this.AssignRoleShowDialog = true
     }
   }
