@@ -1,8 +1,14 @@
 <template>
   <el-dialog title="分配角色" :visible="showRoleDialog">
     <!-- el-checkbox-group选中的是 当前用户所拥有的角色  需要绑定 当前用户拥有的角色-->
-    <el-checkbox-group>
-      <!-- 选项 -->
+    <el-checkbox-group v-model="roleIds">
+      <el-checkbox
+        v-for="item in list"
+        :key="item.id"
+        :label="item.id"
+      >
+        {{ item.name }}
+      </el-checkbox>
     </el-checkbox-group>
     <el-row slot="footer" type="flex" justify="center">
       <el-col :span="6">
@@ -14,6 +20,7 @@
 </template>
 
 <script>
+import { getRoleList } from '@/api/setting'
 export default {
   props: {
     showRoleDialog: {
@@ -24,6 +31,23 @@ export default {
     userId: {
       type: String,
       default: null
+    }
+  },
+  data() {
+    return {
+      // 这选中的集合
+      roleIds: [],
+      // 所有角色的列表
+      list: []
+    }
+  },
+  created() {
+    this.getRoleList()
+  },
+  methods: {
+    async getRoleList() {
+      const { rows } = await getRoleList()
+      this.list = rows
     }
   }
 }

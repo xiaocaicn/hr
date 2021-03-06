@@ -75,6 +75,7 @@
         </el-row>
       </el-card>
       <AddEmployeedialog :show-dialog="showDialog" />
+      <AssignRole :show-role-dialog="AssignRoleShowDialog" />
       <el-dialog title="二维码" :visible="isShowCode" @close="isShowCode = false">
         <el-row type="flex" justify="center" align="middle">
           <canvas ref="mycanvas" />
@@ -91,12 +92,15 @@ import Employees from '@/api/constant/employees'
 import AddEmployeedialog from './components/add-employee-dialog'
 // 引入js中无法使用的过滤器作为方法进行使用
 import { formatDate } from '@/filters'
+import AssignRole from './components/assign-role'
 export default {
   components: {
-    AddEmployeedialog
+    AddEmployeedialog,
+    AssignRole
   },
   data() {
     return {
+      userId: '',
       list: [],
       totalCount: 0,
       page: {
@@ -104,7 +108,8 @@ export default {
         size: 10
       },
       showDialog: false,
-      isShowCode: false
+      isShowCode: false,
+      AssignRoleShowDialog: false
     }
   },
   created() {
@@ -201,7 +206,8 @@ export default {
       return arr
     },
     editRole(id) {
-
+      this.userId = id
+      this.AssignRoleShowDialog = true
     }
   }
 }
