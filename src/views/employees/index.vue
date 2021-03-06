@@ -75,7 +75,7 @@
         </el-row>
       </el-card>
       <AddEmployeedialog :show-dialog="showDialog" />
-      <AssignRole ref="AssignRoleForm" :show-role-dialog.sync="AssignRoleShowDialog" />
+      <AssignRole ref="AssignRoleForm" :show-role-dialog.sync="AssignRoleShowDialog" :user-id="userId" />
       <el-dialog title="二维码" :visible="isShowCode" @close="isShowCode = false">
         <el-row type="flex" justify="center" align="middle">
           <canvas ref="mycanvas" />

@@ -53,7 +53,6 @@ export default {
     },
     async getUserDetailById(id) {
       const { roleIds } = await getUserDetailById(id)
-      this.userId = id
       this.roleIds = roleIds
     },
     async btnOK() {

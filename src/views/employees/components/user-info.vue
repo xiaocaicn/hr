@@ -22,7 +22,7 @@
               v-model="userInfo.timeOfEntry"
               type="date"
               class="inputW"
-              value-format="YYYY-MM-DD"
+              value-format="yyyy-MM-dd"
             />
           </el-form-item>
         </el-col>
