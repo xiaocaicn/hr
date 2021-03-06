@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { addPermission } from '@/api/permission'
 export default {
   props: {
     showDialog: {
@@ -48,13 +49,35 @@ export default {
         pid: '', // 因为做的是树 需要知道添加到哪个节点下了
         enVisible: '0' // 开启
       },
-      rules: {}
+      rules: {
+        name: [
+          { required: true, message: '该项不能为空', trigger: 'blur' }
+        ],
+        code: [
+          { required: true, message: '该项不能为空', trigger: 'blur' }
+        ]
+      }
     }
   }, methods: {
     btnCancel() {
     },
-    btnOK() {
-
+    getData(type, pid) {
+      this.formData.type = type
+      this.formData.pid = pid
+      this.formData.enVisible = '1'
+      console.log(this.formData)
+    },
+    async btnOK() {
+      //   校验
+      this.$refs.perForm.validate()
+      // 请求
+      await addPermission(this.formData)
+      // 提示
+      this.$message.success('增加成功')
+      //   刷新页面
+      this.$parent.getPermissionList()
+      //   关闭弹窗
+      this.$emit('update:showDialog', false)
     }
   }
 }

@@ -4,7 +4,7 @@
       <!-- 靠右的按钮 -->
       <page-tools>
         <template v-slot:after>
-          <el-button type="primary" size="small" @click="addPower">添加权限</el-button>
+          <el-button type="primary" size="small" @click="addPower(1,'0')">添加权限</el-button>
         </template>
       </page-tools>
       <!-- 表格 -->
@@ -18,15 +18,15 @@
           <el-table-column align="center" label="标识" prop="code" />
           <el-table-column align="center" label="描述" prop="description" />
           <el-table-column align="center" label="操作">
-            <template>
-              <el-button type="text">添加</el-button>
+            <template slot-scope="scope">
+              <el-button v-if="scope.row.type === 1" type="text" @click="addPower(2, scope.row.id)">添加</el-button>
               <el-button type="text">编辑</el-button>
               <el-button type="text">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-card>
-      <AddEditPower :show-dialog="showDialog" />
+      <AddEditPower ref="addPowerDialog" :show-dialog.sync="showDialog" />
     </div>
   </div>
 </template>
@@ -56,8 +56,9 @@ export default {
       this.list = transListToTreeData(res, '0')
       console.log(this.list)
     },
-    addPower() {
+    addPower(type, pid) {
       this.showDialog = true
+      this.$refs.addPowerDialog.getData(type, pid)
     }
   }
 }
