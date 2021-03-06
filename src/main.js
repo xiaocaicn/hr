@@ -36,6 +36,9 @@ for (const key in filters) {
   Vue.filter(key, filters[key])
 //   console.log(key, filters[key])
 }
+// 注册打印组件
+import Print from 'vue-print-nb'
+Vue.use(Print)
 
 new Vue({
   el: '#app',

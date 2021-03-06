@@ -48,7 +48,7 @@
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small">角色</el-button>
+              <el-button type="text" size="small" @click="editRole(scope.row.id)">角色</el-button>
               <el-button
                 type="text"
                 size="small"
@@ -122,7 +122,7 @@ export default {
     },
     async getEmployesList() {
       const { rows, total } = await getEmployesList(this.page)
-      // console.log(res)
+      console.log(rows)
       this.list = rows
       this.totalCount = total
     },
@@ -199,6 +199,9 @@ export default {
         }
       }
       return arr
+    },
+    editRole(id) {
+
     }
   }
 }

@@ -56,6 +56,7 @@ export default {
     //   console.log(file)
     //   console.log(fileList)
       this.fileList = [...fileList]
+      this.perShowDialog = false
     },
     handleChange(file, fileList) {
       this.fileList = [...fileList]
@@ -85,7 +86,7 @@ export default {
         // 地区 必填
         Region: 'ap-guangzhou',
         // 希望存放在储存桶中的文件名
-        Key: params.file.name,
+        Key: params.file.size + params.file.name,
         // 储存方式标准储存(固定不用改)
         StorageClass: 'STANDARD',
         // 文件本身
