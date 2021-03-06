@@ -21,7 +21,7 @@
             <template slot-scope="scope">
               <el-button v-if="scope.row.type === 1" type="text" @click="addPower(2, scope.row.id)">添加</el-button>
               <el-button type="text" @click="editPower(scope.row.id)">编辑</el-button>
-              <el-button type="text">删除</el-button>
+              <el-button type="text" @click="delPower(scope.row.id)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -34,7 +34,7 @@
 <script>
 // 引入树形数据的转换函数
 import { transListToTreeData } from '@/utils'
-import { getPermissionList } from '@/api/permission'
+import { getPermissionList, delPermission } from '@/api/permission'
 import AddEditPower from './components/add-editPower'
 export default {
   components: {
@@ -63,6 +63,14 @@ export default {
     async editPower(id) {
       await this.$refs.addPowerDialog.editPowerDialog(id)
       this.showDialog = true
+    },
+    async delPower(id) {
+      // 询问
+      await this.$confirm('确认删除吗')
+      await delPermission(id)
+      this.$message.success('删除成功')
+      // 记得刷新
+      this.getPermissionList()
     }
   }
 }
