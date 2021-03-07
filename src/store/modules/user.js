@@ -1,6 +1,6 @@
 import { setToken, getToken, removeToken, setTimeStamp } from '@/utils/auth'
 import { login, getUserInfo, getUserDetailById } from '@/api/user'
-import resetRouter from '@/router'
+import { resetRouter } from '@/router'
 export default {
   namespaced: true,
   state: {
@@ -38,7 +38,7 @@ export default {
       //   console.log(res)
       return res
     },
-    async logout(store, data) {
+    logout(store, data) {
       store.commit('removeToken')
       store.commit('removeUserInfo')
       resetRouter()
