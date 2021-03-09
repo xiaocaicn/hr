@@ -25,6 +25,7 @@ export default {
       try {
         const res = await login(data)
         store.commit('setToken', res)
+        console.log(res)
         setTimeStamp()
       } catch (error) {
         console.log('失败')
