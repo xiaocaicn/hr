@@ -9,6 +9,8 @@
     </div>
 
     <div class="right-menu">
+      <ThemePicker class="right-menu-item" />
+      <ScreenFull class="right-menu-item" />
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img v-imgerror="require('@/assets/common/bigUserHeader.png')" :src="staffPhoto" class="user-avatar">
@@ -124,7 +126,7 @@ export default {
       height: 100%;
       font-size: 18px;
       color: #5a5e66;
-      vertical-align: text-bottom;
+      vertical-align: middle;
 
       &.hover-effect {
         cursor: pointer;
