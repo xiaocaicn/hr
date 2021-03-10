@@ -15,6 +15,34 @@ const name = defaultSettings.title || 'vue Admin Template' // page title
 // port = 9528 npm run dev OR npm run dev --port = 9528
 const port = process.env.port || process.env.npm_config_port || 9528 // dev port
 
+// 检查是否为生产环境
+const isProd = process.env.NODE_ENV === 'production' // 判断是否是生产环境
+// 创建两个都是空的, 排除对象+引入地址对象
+let externals = {}
+let cdn = {
+  css: [],
+  js: []
+}
+if (isProd) {
+  // 为了之后自动载入一堆cdn代码, 用对象和数组的方式管理需要加载的地址
+  cdn = {
+    css: [
+      'https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.0/theme-chalk/index.css'
+    ],
+    js: [
+      'https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.js',
+      'https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.0/index.js',
+      'https://cdn.bootcdn.net/ajax/libs/xlsx/0.16.8/jszip.min.js',
+      'https://cdn.bootcdn.net/ajax/libs/xlsx/0.16.8/xlsx.full.min.js'
+    ]
+  }
+  externals = {
+    'vue': 'Vue',
+    'element-ui': 'ELEMENT',
+    'xlsx': 'XLSX'
+  }
+}
+
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
   /**
@@ -54,7 +82,8 @@ module.exports = {
       alias: {
         '@': resolve('src')
       }
-    }
+    },
+    externals
   },
   chainWebpack(config) {
     // it can improve the speed of the first screen, it is recommended to turn on preload

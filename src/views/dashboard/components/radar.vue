@@ -9,8 +9,8 @@
 var echarts = require('echarts/lib/echarts') // 引入echarts主模块
 require('echarts/lib/chart/radar') // 引入雷达图
 // 引入提示框和标题组件
-require('echarts/lib/component/tooltip')
-require('echarts/lib/component/title')
+// require('echarts/lib/component/tooltip')
+// require('echarts/lib/component/title')
 
 export default {
   // 页面渲染完毕事件
