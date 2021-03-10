@@ -8,8 +8,8 @@
             <img v-imgerror="defaultImg" :src="userInfo.staffPhoto">
           </div>
           <div class="headInfoTip">
-            <p class="firstChild">早安，{{ userInfo.username }}，祝你开心每一天！</p>
-            <p class="lastChild">{{ userInfo.username }}   |  {{ userInfo.companyName }}-{{ userInfo.departmentName }}</p>
+            <p class="firstChild">{{ $t('hi') }}，{{ userInfo.username }}，祝你开心每一天！</p>
+            <p class="lastChild">{{ $t('greeting') }}{{ userInfo.username }}   |  {{ userInfo.companyName }}-{{ userInfo.departmentName }}</p>
           </div>
         </div>
         <div class="fr" />
