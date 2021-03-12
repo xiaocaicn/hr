@@ -86,6 +86,10 @@ module.exports = {
     externals
   },
   chainWebpack(config) {
+    config.plugin('html').tap(args => {
+      args[0].cdn = cdn
+      return args
+    })
     // it can improve the speed of the first screen, it is recommended to turn on preload
     config.plugin('preload').tap(() => [
       {
